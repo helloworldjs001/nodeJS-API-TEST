@@ -13,13 +13,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22' # Specify your Node.js version
+          node-version: '16' # Specify your Node.js version
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
-        run: npm test
+        run: npx mocha # Runs Mocha with ES Modules support
 
       - name: Upload test results
         if: always()
