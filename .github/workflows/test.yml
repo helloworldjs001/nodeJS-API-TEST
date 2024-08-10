@@ -22,7 +22,7 @@ jobs:
         run: mkdir -p reports
 
       - name: Run tests
-        run: npx mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report_002 --timeout 60000 --verbose
+        run: npx mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report_002 --timeout 10000 --verbose
 
       - name: Upload test results
         if: always()
@@ -34,4 +34,14 @@ jobs:
       - name: Display Mocha test results
         if: always()
         run: |
-          cat reports/report_002.html
+          cat reports/report_002.html || true
+
+      - name: Check for hanging processes
+        if: failure()
+        run: |
+          ps aux
+
+      - name: Cleanup dangling processes
+        if: failure()
+        run: |
+          kill $(ps -e | grep 'node' | awk '{print $1}') || true
