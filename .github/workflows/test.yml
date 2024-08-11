@@ -18,12 +18,30 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Ensure reports directory exists
+        run: mkdir -p reports
+
       - name: Run tests
-        run: npx mocha # Runs Mocha with ES Modules support
+        run: npx mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report_002 --exit
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: reports/ # Adjust the path if needed
+          path: reports/
+
+      - name: Display Mocha test results
+        if: always()
+        run: |
+          cat reports/report_002.html || true
+
+      - name: Check for hanging processes
+        if: failure()
+        run: |
+          ps aux
+
+      - name: Cleanup dangling processes
+        if: failure()
+        run: |
+          kill $(ps -e | grep 'node' | awk '{print $1}') || true
