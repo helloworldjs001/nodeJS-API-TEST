@@ -22,7 +22,7 @@ jobs:
         run: mkdir -p reports
 
       - name: Run tests
-        run: npx mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report_002 --timeout 10000 --verbose
+        run: npx mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report_002 --exit
 
       - name: Upload test results
         if: always()
